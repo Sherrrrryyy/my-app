@@ -5,13 +5,14 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
     try {
         const { username, password, role } = req.body;
-        
+
         const hashedPass = await bcrypt.hash(password, 10);
-        
+
         const newUser = new User({ username, password: hashedPass, role });
         await newUser.save();
         res.status(201).json({ message: `User registerd with username: ${username}` });
-    } catch (err) {        
+    }
+    catch (err) {
         res.status(500).json({ message: `Something went wrong` });
     }
 }
@@ -21,7 +22,6 @@ const login = async (req, res) => {
         const { username, password } = req.body;
         const user = await User.findOne({ username })
         console.log(user);
-        
 
         if (!user) {
             return res.status(404).json({ message: `User with ${username} not found` });
@@ -38,7 +38,7 @@ const login = async (req, res) => {
         )
         res.status(200).json({ token })
     }
-    catch (err) {        
+    catch (err) {
         res.status(500).json({ message: `Something went wrong` });
     }
 }
