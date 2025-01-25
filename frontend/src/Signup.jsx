@@ -1,12 +1,8 @@
-// src/Signup.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Signup = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-    });
+    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -15,51 +11,21 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        });
-        const result = await response.json();
-        alert(result.message);
+        try {
+            const response = await axios.post('http://localhost:4000/api/auth/signup', formData);
+            alert(response.data .message);
+        } catch (error) {
+            alert('Error signing up: ' + error.response.data.message);
+        }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
-                <h2 className="text-2xl mb-4">Signup</h2>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className="border p-2 mb-4 w-full"
-                    required
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border p-2 mb-4 w-full"
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="border p-2 mb-4 w-full"
-                    required
-                />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
-                    Signup
-                </button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+            <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+            <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+            <button type="submit">Sign Up</button>
+        </form>
     );
 };
 
